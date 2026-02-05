@@ -2,10 +2,10 @@ export interface Template {
   id: string;
   name: string;
   thumbnail: string;
-  overlay: (ctx: CanvasRenderingContext2D, width: number, height: number) => void;
+  overlay: (ctx: CanvasRenderingContext2D, width: number, height: number, images: string[], loadedImages?: HTMLImageElement[]) => void;
 }
 
 export interface PhotoData {
-  image: string | null;
+  images: (string | null)[]; // Array of 3 photos
   template: Template | null;
 }

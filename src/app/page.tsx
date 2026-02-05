@@ -11,14 +11,14 @@ import { PhotoData, Template } from "@/types";
 
 export default function Home() {
   const [photoData, setPhotoData] = useState<PhotoData>({
-    image: null,
+    images: [null, null, null],
     template: null,
   });
   const [activeTab, setActiveTab] = useState<"camera" | "upload">("camera");
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
-  const handleImageCapture = (image: string) => {
-    setPhotoData({ ...photoData, image });
+  const handleImageCapture = (images: (string | null)[]) => {
+    setPhotoData({ ...photoData, images });
   };
 
   const handleTemplateSelect = (template: Template) => {
@@ -26,8 +26,10 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setPhotoData({ image: null, template: null });
+    setPhotoData({ images: [null, null, null], template: null });
   };
+
+  const hasAllImages = photoData.images.every(img => img !== null);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
@@ -84,14 +86,20 @@ export default function Home() {
             {/* Input Area */}
             <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border-4 border-accent-yellow shadow-2xl shadow-accent-yellow/20">
               {activeTab === "camera" ? (
-                <CameraCapture onCapture={handleImageCapture} />
+                <CameraCapture 
+                  onCapture={handleImageCapture} 
+                  capturedImages={photoData.images}
+                />
               ) : (
-                <FileUpload onUpload={handleImageCapture} />
+                <FileUpload 
+                  onUpload={handleImageCapture}
+                  uploadedImages={photoData.images}
+                />
               )}
             </div>
 
             {/* Template Selector */}
-            {photoData.image && (
+            {hasAllImages && (
               <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border-4 border-accent-pink shadow-2xl shadow-accent-pink/20 animate-slide-in">
                 <TemplateSelector
                   templates={templates}
@@ -104,17 +112,19 @@ export default function Home() {
 
           {/* Panel Kanan: Preview & Export */}
           <div className="space-y-6">
-            {photoData.image && photoData.template ? (
+            {hasAllImages ? (
               <>
                 <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border-4 border-accent-green shadow-2xl shadow-accent-green/20 animate-slide-in">
-                  <PhotoPreview photoData={photoData} />
+                  <PhotoPreview photoData={photoData} exportCanvasRef={canvasRef} />
                   <canvas ref={canvasRef} className="hidden" />
                 </div>
 
-                <ExportButton
-                  canvasRef={canvasRef}
-                  disabled={!photoData.image || !photoData.template}
-                />
+                {photoData.template && (
+                  <ExportButton
+                    canvasRef={canvasRef}
+                    disabled={!hasAllImages || !photoData.template}
+                  />
+                )}
 
                 <button
                   onClick={handleReset}
@@ -135,9 +145,12 @@ export default function Home() {
                   READY TO MORPH!
                 </h3>
                 <p className="text-accent-yellow font-bold text-lg mb-2">
-                  ⚡ Preview Akan Muncul Di Sini ⚡
+                  ⚡ Ambil 3 Foto Dulu! ⚡
                 </p>
                 <p className="text-gray-400">
+                  {photoData.images.filter(img => img !== null).length} / 3 Foto Terkumpul
+                </p>
+                <p className="text-gray-500 text-sm mt-2">
                   Ambil foto dan pilih template Power Rangers!
                 </p>
               </div>
