@@ -8,7 +8,7 @@ import PhotoPreview from "@/components/PhotoPreview";
 import ExportButton from "@/components/ExportButton";
 import { templates } from "@/templates/templates";
 import { PhotoData, Template } from "@/types";
-import { Zap, Camera, Upload, RefreshCw, Sparkles, Sword } from "lucide-react";
+import { Zap, Camera, Upload, RefreshCw, Sparkles, Sword, ImageIcon } from "lucide-react";
 
 export default function Home() {
   const [photoData, setPhotoData] = useState<PhotoData>({
@@ -16,6 +16,7 @@ export default function Home() {
     template: null,
   });
   const [activeTab, setActiveTab] = useState<"camera" | "upload">("camera");
+  const [blackAndWhite, setBlackAndWhite] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
   const handleImageCapture = (images: (string | null)[]) => {
@@ -128,6 +129,44 @@ export default function Home() {
                 />
               </div>
             )}
+
+            {/* Black & White Filter Toggle */}
+            {hasAllImages && photoData.template && (
+              <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border-4 border-purple-500 shadow-2xl shadow-purple-500/20 animate-slide-in">
+                <h3 className="text-2xl font-black text-white drop-shadow-lg flex items-center justify-center gap-2 mb-4">
+                  <ImageIcon className="w-7 h-7 text-purple-400" />
+                  FILTER FOTO
+                </h3>
+                <button
+                  onClick={() => setBlackAndWhite(!blackAndWhite)}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg border-4 flex items-center justify-center gap-3 ${
+                    blackAndWhite
+                      ? "bg-gradient-to-r from-gray-700 to-gray-900 text-white border-white shadow-gray-500/50"
+                      : "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-purple-300 shadow-purple-500/50"
+                  }`}
+                >
+                  <div
+                    className={`w-12 h-6 rounded-full relative transition-all ${
+                      blackAndWhite ? "bg-gray-400" : "bg-purple-300"
+                    }`}
+                  >
+                    <div
+                      className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-lg transition-all ${
+                        blackAndWhite ? "left-6" : "left-0.5"
+                      }`}
+                    ></div>
+                  </div>
+                  <span>
+                    {blackAndWhite ? "BLACK & WHITE: ON" : "COLOR: ON"}
+                  </span>
+                </button>
+                <p className="text-gray-400 text-sm text-center mt-3">
+                  {blackAndWhite
+                    ? "Foto akan hitam putih klasik"
+                    : "Foto akan berwarna penuh"}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Panel Kanan: Preview & Export */}
@@ -138,6 +177,7 @@ export default function Home() {
                   <PhotoPreview
                     photoData={photoData}
                     exportCanvasRef={canvasRef}
+                    blackAndWhite={blackAndWhite}
                   />
                   <canvas ref={canvasRef} className="hidden" />
                 </div>
