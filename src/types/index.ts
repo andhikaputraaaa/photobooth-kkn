@@ -2,7 +2,13 @@ export interface Template {
   id: string;
   name: string;
   thumbnail: string;
-  overlay: (ctx: CanvasRenderingContext2D, width: number, height: number, images: string[], loadedImages?: HTMLImageElement[]) => void;
+  overlay: (
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    images: string[],
+    loadedImages?: HTMLImageElement[],
+  ) => void;
 }
 
 export interface PhotoData {

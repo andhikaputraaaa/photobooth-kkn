@@ -1,6 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Download, Zap } from "lucide-react";
 import html2canvas from "html2canvas";
 
 interface ExportButtonProps {
@@ -32,8 +32,10 @@ export default function ExportButton({
           : "bg-gradient-to-r from-accent-green via-secondary-500 to-accent-pink hover:from-accent-yellow hover:to-accent-yellow hover:text-black hover:scale-105 border-white shadow-accent-green/50 animate-pulse"
       }`}
     >
+      <Zap size={28} />
       <Download size={28} />
-      ⚡ DOWNLOAD FOTO RANGER! ⚡
+      DOWNLOAD FOTO RANGER!
+      <Zap size={28} />
     </button>
   );
 }

@@ -1,14 +1,17 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Upload, RotateCcw } from "lucide-react";
+import { Upload, RotateCcw, CheckCircle } from "lucide-react";
 
 interface FileUploadProps {
   onUpload: (images: (string | null)[]) => void;
   uploadedImages?: (string | null)[];
 }
 
-export default function FileUpload({ onUpload, uploadedImages = [null, null, null] }: FileUploadProps) {
+export default function FileUpload({
+  onUpload,
+  uploadedImages = [null, null, null],
+}: FileUploadProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleFileChange = useCallback(
@@ -19,7 +22,7 @@ export default function FileUpload({ onUpload, uploadedImages = [null, null, nul
         reader.onload = (event) => {
           if (event.target?.result) {
             const newImages = [...uploadedImages];
-            const emptyIndex = newImages.findIndex(img => img === null);
+            const emptyIndex = newImages.findIndex((img) => img === null);
             if (emptyIndex !== -1) {
               newImages[emptyIndex] = event.target.result as string;
               onUpload(newImages);
@@ -30,19 +33,22 @@ export default function FileUpload({ onUpload, uploadedImages = [null, null, nul
         reader.readAsDataURL(file);
       }
       // Reset input untuk bisa upload file yang sama lagi
-      e.target.value = '';
+      e.target.value = "";
     },
     [onUpload, uploadedImages],
   );
 
-  const retakePhoto = useCallback((index: number) => {
-    const newImages = [...uploadedImages];
-    newImages[index] = null;
-    onUpload(newImages);
-    setCurrentIndex(index);
-  }, [uploadedImages, onUpload]);
+  const retakePhoto = useCallback(
+    (index: number) => {
+      const newImages = [...uploadedImages];
+      newImages[index] = null;
+      onUpload(newImages);
+      setCurrentIndex(index);
+    },
+    [uploadedImages, onUpload],
+  );
 
-  const uploadedCount = uploadedImages.filter(img => img !== null).length;
+  const uploadedCount = uploadedImages.filter((img) => img !== null).length;
 
   return (
     <div className="space-y-4">
@@ -52,9 +58,7 @@ export default function FileUpload({ onUpload, uploadedImages = [null, null, nul
           <div
             key={index}
             className={`relative aspect-square rounded-lg overflow-hidden border-4 ${
-              uploadedImages[index]
-                ? "border-accent-green"
-                : "border-gray-600"
+              uploadedImages[index] ? "border-accent-green" : "border-gray-600"
             }`}
           >
             {uploadedImages[index] ? (
@@ -110,16 +114,29 @@ export default function FileUpload({ onUpload, uploadedImages = [null, null, nul
           <div className="bg-gradient-to-r from-primary-500 to-accent-pink p-4 rounded-full mb-4 animate-pulse">
             <Upload size={48} className="text-white" />
           </div>
-          <span className="text-xl font-black text-white drop-shadow-lg">
-            {uploadedCount >= 3 ? "✓ SEMUA FOTO TERUPLOAD" : "📤 UPLOAD FOTO"}
+          <span className="text-xl font-black text-white drop-shadow-lg flex items-center gap-2">
+            {uploadedCount >= 3 ? (
+              <>
+                <CheckCircle className="w-6 h-6" />
+                SEMUA FOTO TERUPLOAD
+              </>
+            ) : (
+              "UPLOAD FOTO"
+            )}
           </span>
           <span className="text-sm text-accent-yellow font-bold mt-2">
             {uploadedCount} / 3 Foto
           </span>
           <div className="mt-4 flex gap-2">
             <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-secondary-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-2 h-2 bg-accent-yellow rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+            <div
+              className="w-2 h-2 bg-secondary-500 rounded-full animate-pulse"
+              style={{ animationDelay: "0.2s" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-accent-yellow rounded-full animate-pulse"
+              style={{ animationDelay: "0.4s" }}
+            ></div>
           </div>
         </label>
       </div>

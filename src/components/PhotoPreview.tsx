@@ -8,12 +8,15 @@ interface PhotoPreviewProps {
   exportCanvasRef?: React.RefObject<HTMLCanvasElement>;
 }
 
-export default function PhotoPreview({ photoData, exportCanvasRef }: PhotoPreviewProps) {
+export default function PhotoPreview({
+  photoData,
+  exportCanvasRef,
+}: PhotoPreviewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const hasAllImages = photoData.images.every(img => img !== null);
-    
+    const hasAllImages = photoData.images.every((img) => img !== null);
+
     if (hasAllImages && photoData.template) {
       const canvases = [canvasRef.current];
       if (exportCanvasRef?.current) {
@@ -34,7 +37,7 @@ export default function PhotoPreview({ photoData, exportCanvasRef }: PhotoPrevie
         // Render ke semua canvas setelah semua gambar loaded
         canvases.forEach((canvas) => {
           if (!canvas) return;
-          
+
           const ctx = canvas.getContext("2d");
           if (ctx) {
             // Set ukuran canvas untuk Instagram Story (9:16 ratio)
@@ -46,15 +49,21 @@ export default function PhotoPreview({ photoData, exportCanvasRef }: PhotoPrevie
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Terapkan template overlay dengan loaded images
-            photoData.template?.overlay(ctx, canvas.width, canvas.height, photoData.images as string[], loadedImages);
+            photoData.template?.overlay(
+              ctx,
+              canvas.width,
+              canvas.height,
+              photoData.images as string[],
+              loadedImages,
+            );
           }
         });
       });
     }
   }, [photoData, exportCanvasRef]);
 
-  const hasAllImages = photoData.images.every(img => img !== null);
-  const capturedCount = photoData.images.filter(img => img !== null).length;
+  const hasAllImages = photoData.images.every((img) => img !== null);
+  const capturedCount = photoData.images.filter((img) => img !== null).length;
 
   if (!hasAllImages) {
     return (
@@ -68,7 +77,9 @@ export default function PhotoPreview({ photoData, exportCanvasRef }: PhotoPrevie
               {capturedCount} / 3
             </div>
             <p className="text-white text-lg font-bold">Foto Terkumpul</p>
-            <p className="text-gray-400 mt-2">Ambil {3 - capturedCount} foto lagi!</p>
+            <p className="text-gray-400 mt-2">
+              Ambil {3 - capturedCount} foto lagi!
+            </p>
           </div>
         </div>
       </div>
@@ -78,15 +89,24 @@ export default function PhotoPreview({ photoData, exportCanvasRef }: PhotoPrevie
   return (
     <div className="space-y-4">
       <h3 className="text-2xl font-black text-white drop-shadow-lg flex items-center gap-2">
-        ⚡ PREVIEW RANGER POWER ⚡
+        ⚡ PREVIEW PHOTOCARD ⚡
       </h3>
       <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-2xl border-4 border-accent-yellow shadow-2xl shadow-accent-yellow/50 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-500/10 to-accent-pink/10 pointer-events-none"></div>
-        <canvas ref={canvasRef} className="w-full h-auto rounded-lg relative z-10 shadow-2xl border-2 border-white" />
+        <canvas
+          ref={canvasRef}
+          className="w-full h-auto rounded-lg relative z-10 shadow-2xl border-2 border-white"
+        />
         <div className="absolute bottom-4 right-4 flex gap-2">
           <div className="w-3 h-3 bg-primary-500 rounded-full animate-pulse"></div>
-          <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-          <div className="w-3 h-3 bg-accent-yellow rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+          <div
+            className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          <div
+            className="w-3 h-3 bg-accent-yellow rounded-full animate-pulse"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
         </div>
       </div>
     </div>
